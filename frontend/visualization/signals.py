@@ -20,11 +20,11 @@ def get_signal_traces(buy_signals, sell_signals):
 def get_bollinger_v1_signal_traces(df, bb_length, bb_std, bb_long_threshold, bb_short_threshold):
     # Add Bollinger Bands
     candles = df.copy()
-    candles.ta.bbands(length=bb_length, std=bb_std, append=True)
+    candles.ta.bbands(length=bb_length, lower_std=bb_std, upper_std=bb_std, append=True)
 
     # Generate conditions
-    buy_signals = candles[candles[f"BBP_{bb_length}_{bb_std}"] < bb_long_threshold]
-    sell_signals = candles[candles[f"BBP_{bb_length}_{bb_std}"] > bb_short_threshold]
+    buy_signals = candles[candles[f"BBP_{bb_length}_{bb_std}_{bb_std}"] < bb_long_threshold]
+    sell_signals = candles[candles[f"BBP_{bb_length}_{bb_std}_{bb_std}"] > bb_short_threshold]
 
     return get_signal_traces(buy_signals, sell_signals)
 
@@ -32,11 +32,11 @@ def get_bollinger_v1_signal_traces(df, bb_length, bb_std, bb_long_threshold, bb_
 def get_macdbb_v1_signal_traces(df, bb_length, bb_std, bb_long_threshold, bb_short_threshold, macd_fast, macd_slow,
                                 macd_signal):
     # Add Bollinger Bands
-    df.ta.bbands(length=bb_length, std=bb_std, append=True)
+    df.ta.bbands(length=bb_length, lower_std=bb_std, upper_std=bb_std, append=True)
     # Add MACD
     df.ta.macd(fast=macd_fast, slow=macd_slow, signal=macd_signal, append=True)
     # Decision Logic
-    bbp = df[f"BBP_{bb_length}_{bb_std}"]
+    bbp = df[f"BBP_{bb_length}_{bb_std}_{bb_std}"]
     macdh = df[f"MACDh_{macd_fast}_{macd_slow}_{macd_signal}"]
     macd = df[f"MACD_{macd_fast}_{macd_slow}_{macd_signal}"]
 

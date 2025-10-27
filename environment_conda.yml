@@ -19,7 +19,6 @@ dependencies:
       - glom
       - defillama
       - statsmodels
-      - pandas_ta==0.3.14b
       - pyyaml
       - pathlib
       - streamlit-authenticator==0.3.2
