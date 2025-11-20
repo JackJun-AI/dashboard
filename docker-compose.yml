@@ -6,9 +6,15 @@ services:
       - "8501:8501"
     environment:
         - AUTH_SYSTEM_ENABLED=False
-        - BACKEND_API_HOST=backend-api
+        - BACKEND_API_HOST=hummingbot-api
         - BACKEND_API_PORT=8000
         - BACKEND_API_USERNAME=admin
         - BACKEND_API_PASSWORD=admin
     volumes:
       - .:/home/dashboard
+    networks:
+      - mcp_emqx-bridge
+
+networks:
+  mcp_emqx-bridge:
+    external: true
