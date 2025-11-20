@@ -1,7 +1,10 @@
 services:
   dashboard:
     container_name: dashboard
-    image: hummingbot/dashboard:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: dashboard:local  # Optional: tag the built image
     ports:
       - "8501:8501"
     environment:
