@@ -16,6 +16,7 @@ def public_pages():
             st.Page("frontend/pages/config/macd_bb_v1/app.py", title="MACD_BB V1", icon="📊", url_path="macd_bb_v1"),
             st.Page("frontend/pages/config/supertrend_v1/app.py", title="SuperTrend V1", icon="👨‍🔬", url_path="supertrend_v1"),
             st.Page("frontend/pages/config/xemm_controller/app.py", title="XEMM Controller", icon="⚡️", url_path="xemm_controller"),
+            st.Page("frontend/pages/config/ai_agent_v1/app.py", title="AI Agent V1", icon="🤖", url_path="ai_agent_v1"),
         ],
         "Data": [
             st.Page("frontend/pages/data/download_candles/app.py", title="Download Candles", icon="💹", url_path="download_candles"),
