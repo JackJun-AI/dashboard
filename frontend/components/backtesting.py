@@ -33,12 +33,30 @@ def backtesting_section(inputs, backend_api_client):
                 config=inputs,
             )
         except Exception as e:
-            st.error(e)
+            st.error(f"❌ Backtesting failed: {e}")
             return None
+        
+        # Check if API returned an error
+        if isinstance(backtesting_results, dict) and "error" in backtesting_results:
+            st.error(f"❌ Backtesting error: {backtesting_results['error']}")
+            st.info("💡 **Common Issues:**\n"
+                   "- Check if OpenRouter API key is valid\n"
+                   "- Verify candles data is available for the selected date range\n"
+                   "- Ensure all required configuration fields are set\n"
+                   "- Try a shorter date range (e.g., 2-3 days first)")
+            return None
+        
+        # Check if results contain required data
+        if "processed_data" not in backtesting_results:
+            st.error("❌ Backtesting results missing 'processed_data'. The backtest may have failed.")
+            return None
+        
         if len(backtesting_results["processed_data"]) == 0:
             st.error("No trades were executed during the backtesting period.")
             return None
-        if len(backtesting_results["executors"]) == 0:
+        
+        if "executors" not in backtesting_results or len(backtesting_results["executors"]) == 0:
             st.error("No executors were found during the backtesting period.")
             return None
+        
         return backtesting_results

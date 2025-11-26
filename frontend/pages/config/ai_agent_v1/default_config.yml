@@ -7,6 +7,11 @@ controller_type: directional_trading
 connector_name: binance_perpetual
 trading_pair: BTC-USDT  # Primary trading pair (for compatibility)
 
+# ==================== Candles Configuration (for backtesting) ====================
+candles_connector: binance_perpetual
+candles_trading_pair: BTC-USDT
+interval: 5m  # K-line interval
+
 # ==================== Multi-Asset Configuration ====================
 trading_pairs:
   - BTC-USDT
@@ -34,7 +39,7 @@ llm_max_tokens: 4000
 # 600 = 10 minutes (less API calls)
 decision_interval: 300
 
-# ==================== Candles Configuration ====================
+# ==================== Candles Settings ====================
 candles_interval: 5m  # K-line interval
 candles_max_records: 100  # Number of historical candles
 

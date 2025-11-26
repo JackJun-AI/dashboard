@@ -113,17 +113,30 @@ def user_inputs():
         "connector_name": connector_name,
         "trading_pair": trading_pairs[0] if trading_pairs else "BTC-USDT",  # 主交易对
         "trading_pairs": trading_pairs,
+        
+        # Candles configuration (required for backtesting)
+        "candles_connector": connector_name,
+        "candles_trading_pair": trading_pairs[0] if trading_pairs else "BTC-USDT",
+        "interval": candles_interval,
+        
+        # Trading parameters
         "leverage": leverage,
         "total_amount_quote": total_amount_quote,
         "max_concurrent_positions": max_concurrent_positions,
         "single_position_size_pct": single_position_size_pct,
+        
+        # AI configuration
         "openrouter_api_key": openrouter_api_key,
         "llm_model": llm_model,
         "llm_temperature": llm_temperature,
         "llm_max_tokens": 4000,
         "decision_interval": decision_interval,
+        
+        # Candles settings
         "candles_interval": candles_interval,
         "candles_max_records": candles_max_records,
+        
+        # Risk management
         "stop_loss": sl,
         "take_profit": tp,
         "time_limit": time_limit,
@@ -132,6 +145,8 @@ def user_inputs():
             "trailing_delta": ts_delta
         } if ts_ap and ts_delta else None,
         "take_profit_order_type": take_profit_order_type.value if take_profit_order_type else "limit",
+        
+        # Position mode
         "position_mode": "ONEWAY"
     }
 
