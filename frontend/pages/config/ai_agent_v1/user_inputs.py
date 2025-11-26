@@ -115,9 +115,10 @@ def user_inputs():
         "trading_pairs": trading_pairs,
         
         # Candles configuration (required for backtesting)
+        # 注意：interval 和 candles_interval 必须保持一致
         "candles_connector": connector_name,
         "candles_trading_pair": trading_pairs[0] if trading_pairs else "BTC-USDT",
-        "interval": candles_interval,
+        "interval": candles_interval,  # 与 candles_interval 保持一致
         
         # Trading parameters
         "leverage": leverage,
