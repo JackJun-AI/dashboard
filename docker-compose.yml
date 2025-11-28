@@ -9,15 +9,15 @@ services:
       - "8501:8501"
     environment:
         - AUTH_SYSTEM_ENABLED=False
-        - BACKEND_API_HOST=hummingbot-api
-        - BACKEND_API_PORT=8000
+        - BACKEND_API_HOST=hummingbot-api  # 通过 Docker 网络访问
+        - BACKEND_API_PORT=8000            # API 容器内部端口
         - BACKEND_API_USERNAME=admin
         - BACKEND_API_PASSWORD=admin
     volumes:
       - .:/home/dashboard
     networks:
-      - mcp_emqx-bridge
+      - hummingbot-network  # 使用 hummingbot-api 创建的网络
 
 networks:
-  mcp_emqx-bridge:
-    external: true
+  hummingbot-network:
+    external: true  # 使用外部已存在的网络
