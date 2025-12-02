@@ -220,7 +220,7 @@ with tab_config:
         "candles_interval": inputs["candles_interval"],
         "interval": inputs["interval"],
         "candles_max_records": inputs["candles_max_records"],
-        "openrouter_api_key": inputs["openrouter_api_key"],
+        # "openrouter_api_key": inputs["openrouter_api_key"],
         "llm_model": inputs["llm_model"],
         "llm_temperature": inputs["llm_temperature"],
         "llm_max_tokens": inputs["llm_max_tokens"],
