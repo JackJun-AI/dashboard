@@ -226,12 +226,11 @@ with tab_config:
         "llm_max_tokens": inputs["llm_max_tokens"],
         "leverage": inputs["leverage"],
         "position_mode": inputs["position_mode"],
-        "triple_barrier_config": {
-            "stop_loss": inputs["stop_loss"],
-            "take_profit": inputs["take_profit"],
-            "time_limit": inputs["time_limit"],
-            "trailing_stop": inputs["trailing_stop"]
-        }
+        "stop_loss": inputs["stop_loss"],
+        "take_profit": inputs["take_profit"],
+        "time_limit": inputs["time_limit"],
+        "trailing_stop": inputs["trailing_stop"],
+        "custom_system_prompt": inputs.get("custom_system_prompt")
     }
     
     # Show config preview

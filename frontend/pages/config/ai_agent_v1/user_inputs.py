@@ -156,7 +156,30 @@ Your custom framework here...""",
         ) / 100
     
     # ==================== 风险控制 ====================
-    sl, tp, time_limit, ts_ap, ts_delta, take_profit_order_type = get_risk_management_inputs()
+    with st.expander("🛡️ Risk Management", expanded=True):
+        c1, c2 = st.columns(2)
+        with c1:
+            stop_loss = st.number_input(
+                "Stop Loss (%)",
+                min_value=0.5,
+                max_value=10.0,
+                value=default_config.get("stop_loss", 2.5) * 100 if isinstance(default_config.get("stop_loss"), (int, float)) else 2.5,
+                step=0.5,
+                format="%.1f",
+                help="Exit position if loss reaches this percentage"
+            ) / 100
+        with c2:
+            take_profit = st.number_input(
+                "Take Profit (%)",
+                min_value=1.0,
+                max_value=20.0,
+                value=default_config.get("take_profit", 5.0) * 100 if isinstance(default_config.get("take_profit"), (int, float)) else 5.0,
+                step=0.5,
+                format="%.1f",
+                help="Exit position if profit reaches this percentage"
+            ) / 100
+        
+        st.info("ℹ️ Time limit and trailing stop are disabled for AI Agent V1 (AI controls exit timing)")
     
     # 返回配置
     return {
@@ -190,15 +213,11 @@ Your custom framework here...""",
         "candles_interval": candles_interval,
         "candles_max_records": candles_max_records,
         
-        # Risk management
-        "stop_loss": sl,
-        "take_profit": tp,
-        "time_limit": time_limit,
-        "trailing_stop": {
-            "activation_price": ts_ap,
-            "trailing_delta": ts_delta
-        } if ts_ap and ts_delta else None,
-        "take_profit_order_type": take_profit_order_type.value if take_profit_order_type else "limit",
+        # Risk management (flat structure, not nested)
+        "stop_loss": stop_loss,
+        "take_profit": take_profit,
+        "time_limit": None,  # AI controls exit timing
+        "trailing_stop": None,  # AI controls exit timing
         
         # Position mode
         "position_mode": "ONEWAY"
