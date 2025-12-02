@@ -49,7 +49,7 @@ def user_inputs():
                 "OpenRouter API Key",
                 value=default_config.get("openrouter_api_key", ""),
                 type="password",
-                help="Get your API key from https://openrouter.ai"
+                help="Get your API key from https://openrouter.ai. Leave empty to use OPENROUTER_API_KEY env var."
             )
             llm_model = st.selectbox(
                 "LLM Model",
@@ -75,6 +75,58 @@ def user_inputs():
                 value=default_config.get("llm_temperature", 0.1),
                 step=0.1
             )
+    
+    # ==================== 自定义 System Prompt ====================
+    with st.expander("📝 Custom System Prompt (Advanced)", expanded=False):
+        st.markdown("""
+        **Customize the AI's trading strategy and decision-making framework.**
+        
+        Leave empty to use the default high-probability trading framework, or provide your own custom instructions.
+        
+        💡 **Tips:**
+        - Define specific trading rules and conditions
+        - Set risk tolerance and position management guidelines
+        - Specify indicator preferences (RSI, MACD, EMA, etc.)
+        - Add market condition filters
+        - Include your trading philosophy
+        """)
+        
+        custom_system_prompt = st.text_area(
+            "Custom System Prompt",
+            value=default_config.get("custom_system_prompt", ""),
+            height=400,
+            placeholder="""Example:
+# Custom Trading Framework
+
+## Market Analysis
+- Focus on momentum breakouts with volume confirmation
+- Avoid choppy/sideways markets (wait for clear trend)
+- RSI must be between 40-70 for entries
+
+## Position Management
+- Maximum 2% risk per trade
+- Always use 2:1 minimum risk/reward ratio
+- Scale out at 50% profit, let remainder run
+
+## Entry Rules
+- LONG: Price > EMA(20), MACD crossing up, RSI 40-60, volume > average
+- SHORT: Price < EMA(20), MACD crossing down, RSI 40-60, volume > average
+
+## Exit Rules
+- Stop loss: Below recent swing low (LONG) or above swing high (SHORT)
+- Take profit: Previous resistance (LONG) or support (SHORT)
+- Exit immediately if MACD crosses against position
+
+Your custom framework here...""",
+            help="This will replace the default trading framework. The AI will follow these instructions instead."
+        )
+        
+        if custom_system_prompt:
+            st.success(f"✅ Custom system prompt configured ({len(custom_system_prompt)} characters)")
+            with st.expander("👁️ Preview Custom Prompt"):
+                st.text(custom_system_prompt)
+        else:
+            st.info("ℹ️ Using default high-probability trading framework")
     
     # ==================== K线配置 ====================
     with st.expander("📊 Candles Configuration", expanded=True):
@@ -132,6 +184,7 @@ def user_inputs():
         "llm_temperature": llm_temperature,
         "llm_max_tokens": 4000,
         "decision_interval": decision_interval,
+        "custom_system_prompt": custom_system_prompt if custom_system_prompt else None,
         
         # Candles settings
         "candles_interval": candles_interval,

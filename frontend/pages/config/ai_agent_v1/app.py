@@ -307,16 +307,50 @@ with tab_monitor:
             data, error = safe_get_json_response(response)
             if error:
                 st.error(f"❌ {error}")
+                monitor_run_id = None
             else:
                 runs = data.get("runs", [])
                 
-                if runs:
-                    # Sort: RUNNING first, then PENDING, then others by created_at
+                if runs and len(runs) > 0:
+                    # Sort: RUNNING first, then PENDING, then others by created_at (newest first)
                     status_priority = {"RUNNING": 0, "PENDING": 1, "COMPLETED": 2, "FAILED": 3, "CANCELLED": 4}
-                    sorted_runs = sorted(runs, key=lambda x: (
-                        status_priority.get(x.get("status", ""), 999),
-                        -(x.get("created_at", "2000-01-01") or "2000-01-01").replace("T", "").replace(":", "").replace("-", "")[:14]
-                    ))
+                    
+                    # Sort by status priority and created_at (descending)
+                    sorted_runs = sorted(
+                        runs, 
+                        key=lambda x: (
+                            status_priority.get(x.get("status", ""), 999),
+                            x.get("created_at", "2000-01-01") or "2000-01-01"
+                        ),
+                        reverse=False  # Status ascending
+                    )
+                    
+                    # Now reverse within each status group to get newest first
+                    final_sorted = []
+                    current_status = None
+                    current_group = []
+                    
+                    for run in sorted_runs:
+                        run_status = run.get("status", "")
+                        if current_status is None:
+                            current_status = run_status
+                        
+                        if run_status == current_status:
+                            current_group.append(run)
+                        else:
+                            # Reverse current group and add to final
+                            current_group.reverse()
+                            final_sorted.extend(current_group)
+                            # Start new group
+                            current_status = run_status
+                            current_group = [run]
+                    
+                    # Don't forget the last group
+                    if current_group:
+                        current_group.reverse()
+                        final_sorted.extend(current_group)
+                    
+                    sorted_runs = final_sorted
                     
                     # Create a selection table
                     st.write(f"Found **{len(sorted_runs)}** backtest runs (sorted by status and time):")
@@ -366,7 +400,12 @@ with tab_monitor:
                             st.info(f"Using manual run_id: `{manual_run_id[:8]}...`")
                     
                 else:
-                    st.info("No backtest runs found. Start a new backtest in the 'New Backtest' tab.")
+                    st.info("📝 No backtest runs found yet.")
+                    st.write("**Get started:**")
+                    st.write("1. Go to the **'⚙️ New Backtest'** tab")
+                    st.write("2. Configure your backtest parameters")
+                    st.write("3. Click **'🚀 Start Backtest'**")
+                    st.write("4. Come back here to monitor progress!")
                     monitor_run_id = None
                     
         else:
@@ -374,7 +413,11 @@ with tab_monitor:
             monitor_run_id = None
             
     except Exception as e:
-        st.error(f"❌ Error fetching runs: {e}")
+        import traceback
+        error_details = traceback.format_exc()
+        st.error(f"❌ Error fetching runs: {str(e)}")
+        with st.expander("🔍 Error Details (for debugging)"):
+            st.code(error_details)
         monitor_run_id = None
     
     # Step 2: Display detailed status for selected run
