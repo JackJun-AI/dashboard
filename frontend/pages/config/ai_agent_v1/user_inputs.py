@@ -54,9 +54,10 @@ def user_inputs():
             llm_model = st.selectbox(
                 "LLM Model",
                 [
-                    "deepseek/deepseek-chat",
-                    "anthropic/claude-3.5-sonnet",
-                    "openai/gpt-4-turbo"
+                    "google/gemini-3-pro-preview",
+                    "deepseek/deepseek-v3.2",
+                    "anthropic/claude-sonnet-4.5",
+                    "openai/gpt-5.1"
                 ],
                 index=0
             )
